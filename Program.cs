@@ -13,6 +13,7 @@ namespace ImDiskManager
     class Program
     {
         public static SettingHandler MainSettings = new SettingHandler();
+        public static Objects.ProgramSettings GlobalVars = new Objects.ProgramSettings();
 
         static Boolean CheckDriveStatus(string driveName)
         {
@@ -41,7 +42,7 @@ namespace ImDiskManager
         [STAThread]
         static int Main(string[] args)
         {
-            
+                     
             Dictionary<string, string> argumentMapping = new Dictionary<string, string>();
 
             argumentMapping.Add("-Drive=", "DriveLetter");
@@ -56,11 +57,12 @@ namespace ImDiskManager
             //Actually parse the arguments
             MainSettings = ArgumentParser.parseArgs(args, MainSettings, argumentMapping);
 
-            string DriveLetter = MainSettings.GlobalStrings["DriveLetter"];
-            string ImagePath = MainSettings.GlobalStrings["ImagePath"];
-            Boolean exitFlag = MainSettings.GlobalBooleans["ExitFlag"];
-            Boolean ReadytoMap = MainSettings.GlobalBooleans["ReadytoMap"];
-            Int32 Timeout = 10;
+
+            GlobalVars.DriveLetter = MainSettings.GlobalStrings["DriveLetter"];
+            GlobalVars.ImagePath = MainSettings.GlobalStrings["ImagePath"];
+            GlobalVars.ExitFlag = MainSettings.GlobalBooleans["ExitFlag"];
+            GlobalVars.ReadyToMap = MainSettings.GlobalBooleans["ReadytoMap"];
+            GlobalVars.Timeout = 10;
 
             Logger.WriteToLog("App started at " + DateTime.Now);
 
@@ -71,26 +73,16 @@ namespace ImDiskManager
             //Application Loop
             do
             {
-                Boolean needsUpdated = false;
-                MainSettings.GlobalBooleans.TryGetValue("NeedsUpdated", out needsUpdated);
-                if ( needsUpdated == true)
+                if (GlobalVars.ReadyToMap == true)
                 {
-                    DriveLetter = MainSettings.GlobalStrings["DriveLetter"];
-                    ImagePath = MainSettings.GlobalStrings["ImagePath"];
-                    exitFlag = MainSettings.GlobalBooleans["ExitFlag"];
-                    ReadytoMap = MainSettings.GlobalBooleans["ReadytoMap"];
-                }
-
-                if (ReadytoMap == true)
-                {
-                    if (!CheckDriveStatus(DriveLetter))
+                    if (!CheckDriveStatus(GlobalVars.DriveLetter))
                     {
                         ProcessStartInfo startInfo = new ProcessStartInfo();
                         startInfo.CreateNoWindow = false;
                         startInfo.UseShellExecute = false;
                         startInfo.FileName = "Imdisk";
                         startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        startInfo.Arguments = "-a -t vm -f " + ImagePath + " -m " + DriveLetter + ": -b auto";
+                        startInfo.Arguments = "-a -t vm -f " + GlobalVars.ImagePath + " -m " + GlobalVars.DriveLetter + ": -b auto";
                         try
                         {
                             using (Process exeProcess = Process.Start(startInfo))
@@ -104,12 +96,12 @@ namespace ImDiskManager
                         }
 
                         int i = 0;
-                        while (Timeout > i)
+                        while (GlobalVars.Timeout > i)
                         {
-                            if (CheckDriveStatus(DriveLetter))
+                            if (CheckDriveStatus(GlobalVars.DriveLetter))
                             {
                                 Logger.WriteToLog("Drive has been mapped.");
-                                i = Timeout + 1;
+                                i = GlobalVars.Timeout + 1;
                             }
                             else
                             {
@@ -117,6 +109,10 @@ namespace ImDiskManager
                                 System.Threading.Thread.Sleep(1000);
                                 i++;
                             }
+
+                            Logger.WriteToLog("We could not map the drive");
+                            Thread.MemoryBarrier();
+                            GlobalVars.ReadyToMap = false;
                         }
                     }
                     else
@@ -126,7 +122,7 @@ namespace ImDiskManager
                 }
 
                 System.Threading.Thread.Sleep(1000);
-            } while (exitFlag == false);
+            } while (GlobalVars.ExitFlag == false);
 
             Logger.WriteToLog("App ended at " + DateTime.Now);
             return 1;
