@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImDiskManager", "ImDiskManager.csproj", "{5886AA6F-A121-450C-B3BC-D1790415C67F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C87476D8-B676-438B-8E8F-AC2240A9BE4B} = {C87476D8-B676-438B-8E8F-AC2240A9BE4B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLibrary", "..\Csharp-HelperFuncs\HelperLibrary\HelperLibrary.csproj", "{C87476D8-B676-438B-8E8F-AC2240A9BE4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{5886AA6F-A121-450C-B3BC-D1790415C67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5886AA6F-A121-450C-B3BC-D1790415C67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5886AA6F-A121-450C-B3BC-D1790415C67F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87476D8-B676-438B-8E8F-AC2240A9BE4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87476D8-B676-438B-8E8F-AC2240A9BE4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87476D8-B676-438B-8E8F-AC2240A9BE4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87476D8-B676-438B-8E8F-AC2240A9BE4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

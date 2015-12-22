@@ -8,11 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ImDiskManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("
-			")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ImDiskManager")]
-[assembly: AssemblyCopyright("Copyright © 
-			 2015")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
