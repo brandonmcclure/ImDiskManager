@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -13,16 +14,41 @@ namespace ImDiskManager
 {
     public partial class MainForm : Form
     {
+        
         public MainForm()
         {
             InitializeComponent();
+            initForm();
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void initForm()
         {
+            ArrayList drives = Program.GetAvailableDrives();
 
+            foreach (var drive in drives)
+            {
+                AvailableDrivesList.Items.Add(drive);
+            }
+        }
+        //Overrides the base method for the form closing. 
+        //THe form has the signal to close, I can still access the form
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            //Updates my ExitFlag to tell the proccessing thread to exit as well
+            Thread.MemoryBarrier();
+            Program.GlobalVars.ExitFlag = true;
+            Thread.MemoryBarrier();
         }
 
+        //I cannont access the form once this one hits
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+        }
+
+        /*
         private void button1_Click(object sender, EventArgs e)
         {
             string drive = textBox1.Text;
@@ -31,10 +57,6 @@ namespace ImDiskManager
             Thread.MemoryBarrier();
             
         }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+         * */
     }
 }
