@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,23 @@ namespace ImDiskManager
             Application.Run(myForm); 
         }
 
+        public static ArrayList GetAvailableDrives()
+        {
+            ArrayList DriveLetters = new ArrayList(26);
+            for (int i = 65; i < 91; i++)
+            {
+                DriveLetters.Add(Convert.ToChar(i));
+            }
+
+            System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
+
+            foreach (var drive in drives)
+            {
+
+                DriveLetters.Remove(drive.Name);
+            }
+            return DriveLetters;
+        }
         [STAThread]
         static int Main(string[] args)
         {
